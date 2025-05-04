@@ -4,7 +4,7 @@ __lua__
 --main pico-8 functions
 function _init()
 	keyb:init()
-	game.current="meadow"
+	game.current="crossroads"
  game:look()
 end
 
@@ -241,7 +241,6 @@ game.meadow=room:new({
  items={"troll"},
 
  action=function(self,cmd,tar)
-  printh(count(self.items,"troll"))
   if cmd=="south" do
    game:go("cave")
   elseif cmd=="talk" do
@@ -256,7 +255,7 @@ game.meadow=room:new({
    say("a troll is blocking it.")
    say("you want me to fight? no way!")
   elseif cmd=="north" do
-   say("asd")
+   game:go("crossroads")
   else
    return false
   end
@@ -264,6 +263,16 @@ game.meadow=room:new({
 })
 
 game.crossroads=room:new({
+ desc={"you are at a crossroads",
+  "there are exits everywhere!"},
+
+ action=function(self,cmd)
+  if cmd=="north" or cmd=="south" or cmd=="east" or cmd=="west" do
+   say("you go "..cmd.."...")
+  else
+   return false
+  end
+ end
 })
 
 __gfx__
