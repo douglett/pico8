@@ -1,6 +1,15 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+--todo
+-- 10 rooms
+-- some more items
+-- end goal. avalon?
+-- excalibur?
+-- skull with lines on
+-- generic but wierd places
+-- new meadow room
+
 --main pico-8 functions
 function _init()
 	keyb:init()
@@ -217,7 +226,7 @@ game.cave=room:new({
 
  action=function(self,cmd,tar)
   if cmd=="north" and self.flags.unlocked do
-   game:go("meadow")
+   game:go("river")
   elseif cmd=="north" do
    say("the door is locked")
   elseif cmd=="get" and tar=="key" do
@@ -234,8 +243,8 @@ game.cave=room:new({
  end
 })
 
-game.meadow=room:new({
- desc={"you are in a lovely meadow",
+game.river=room:new({
+ desc={"you are at a river bank",
   "there is: cave south,",
   "bridge north"},
  items={"troll"},
@@ -265,10 +274,24 @@ game.meadow=room:new({
 game.crossroads=room:new({
  desc={"you are at a crossroads",
   "there are exits everywhere!"},
+ solution={"east","south","east","north"},
+ flags={pos=1},
 
  action=function(self,cmd)
   if cmd=="north" or cmd=="south" or cmd=="east" or cmd=="west" do
-   say("you go "..cmd.."...")
+   local hint=""
+   local ok=self.solution[self.flags.pos]==cmd
+   if ok and self.flags.pos==#self.solution do
+    self.flags.pos=1
+    game:go("river")
+    return nil
+   elseif ok do
+    hint="warmer"
+    self.flags.pos=self.flags.pos+1
+   else
+    self.flags.pos=1
+   end
+   say("you go "..cmd.."... "..hint)
   else
    return false
   end
