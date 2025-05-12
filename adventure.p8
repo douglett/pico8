@@ -15,7 +15,7 @@ function _init()
 	keyb:init()
 	-- game.current="forestpath"
  -- game:look()
- game:go("forestpath")
+ game:go("belly")
 end
 
 function _update()
@@ -312,7 +312,8 @@ game.forestpath=room:new({
  action=function(self,cmd)
   if contains(self.items,"witch") and (cmd=="north" or cmd=="south") do
    say("you hop helplessly. ribbit!")
-  -- elseif cmd=="north" do
+  elseif cmd=="north" do
+   game:go("logcabin")
   elseif cmd=="south" do
    game:go("crossroads")
   elseif cmd=="kiss" and contains(self.items,"witch") do
@@ -327,6 +328,61 @@ game.forestpath=room:new({
  entry=function(self,cmd)
   if contains(self.items,"witch") do
    say("you are turned into a frog!")
+  end
+ end
+})
+
+game.logcabin=room:new({
+ desc={"you are in a log cabin",
+  "there is a door south"},
+ items={"grandma"},
+ flags={whatbig=0},
+
+ action=function(self,cmd)
+  if cmd=="south" do
+   game:go("forestpath")
+  elseif cmd=="talk" do
+   say("'grandma, what big ??? you have'")
+  elseif self.flags.whatbig==0 and (cmd=="ears" or cmd=="ear") do
+   say("'grandma, what big ears'")
+   say("'all the better to hear you'")
+   self.flags.whatbig=1
+  elseif self.flags.whatbig==1 and (cmd=="hands" or cmd=="hand") do
+   say("'grandma, what big hands'")
+   say("'all the better to hug you'")
+   self.flags.whatbig=2
+  elseif self.flags.whatbig==2 and cmd=="teeth" do
+   say("'grandma, what big teeth!'")
+   say("'all the better to eat you!!'")
+   say("oh no, it was really a wolf!")
+   say("he eats you! nomnomnom")
+   game:go("belly")   
+  else
+   return false
+  end
+ end
+})
+
+game.belly=room:new({
+ desc={"you are in a wolfs belly!",
+  "there are 'exits' up, down"},
+ flags={sure=0},
+
+ action=function(self,cmd)
+  if cmd=="up" do
+   say("his teeth are firmly closed")
+  elseif cmd=="down" and self.flags.sure==0 do
+   say("are we really going out that")
+   say("way?")
+   self.flags.sure=1
+  elseif cmd=="down" and self.flags.sure==1 do
+   say("really? you'll turn into... the")
+   say("stuff...")
+   self.flags.sure=2
+  elseif cmd=="down" and self.flags.sure==2 do
+   say("ok fine. you 'exit' the wolf.")
+  else
+   return false
   end
  end
 })
