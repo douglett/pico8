@@ -13,8 +13,9 @@ __lua__
 --main pico-8 functions
 function _init()
 	keyb:init()
-	game.current="crossroads"
- game:look()
+	-- game.current="forestpath"
+ -- game:look()
+ game:go("forestpath")
 end
 
 function _update()
@@ -147,7 +148,7 @@ game={
   elseif cmd=="inv" do
    say("your inventory is empty")
   else
-   say("you tried to "..cmd..", but it failed")
+   say("you failed to "..cmd)
   end
  end,
 
@@ -180,6 +181,11 @@ game={
   end
   self.current=place
   self:look()
+  -- run entry condition
+  local room=self[self.current]
+  if room.entry!=nil do
+   room:entry()
+  end
  end,
 
  addinv=function(self,item)
@@ -283,7 +289,7 @@ game.crossroads=room:new({
    local ok=self.solution[self.flags.pos]==cmd
    if ok and self.flags.pos==#self.solution do
     self.flags.pos=1
-    game:go("river")
+    game:go("forestpath")
     return nil
    elseif ok do
     hint="warmer"
@@ -294,6 +300,33 @@ game.crossroads=room:new({
    say("you go "..cmd.."... "..hint)
   else
    return false
+  end
+ end
+})
+
+game.forestpath=room:new({
+ desc={"you are on a forest path",
+  "a path goes north, south"},
+ items={"witch"},
+
+ action=function(self,cmd)
+  if contains(self.items,"witch") and (cmd=="north" or cmd=="south") do
+   say("you hop helplessly. ribbit!")
+  -- elseif cmd=="north" do
+  elseif cmd=="south" do
+   game:go("crossroads")
+  elseif cmd=="kiss" and contains(self.items,"witch") do
+   say("you turn into a handsome pr...")
+   say("well a human. the witch melts!")
+   del(self.items,"witch")
+  else
+   return false
+  end
+ end,
+
+ entry=function(self,cmd)
+  if contains(self.items,"witch") do
+   say("you are turned into a frog!")
   end
  end
 })
