@@ -3,18 +3,16 @@ version 42
 __lua__
 --todo
 -- 10 rooms
--- some more items
+ -- 4 more
 -- end goal. avalon?
 -- excalibur?
 -- skull with lines on
 -- generic but wierd places
--- new meadow room
 
 --main pico-8 functions
 function _init()
 	keyb:init()
-	-- game.current="forestpath"
- -- game:look()
+ game:go("cave")
  game:go("belly")
 end
 
@@ -40,7 +38,6 @@ function say(...)
  local arg={...}
  for k,ln in ipairs(arg) do
   scrl:push(ln)
-  printh("s: "..ln)
  end
 end
 
@@ -209,7 +206,7 @@ game={
 }
 
 -->8
---rooms
+--room class
 room={
  desc={"you are in some kinda room"},
  items={},
@@ -228,6 +225,10 @@ room={
  end
 }
 
+-->8
+--game rooms
+
+--cave
 game.cave=room:new({
  desc={"you are in a smelly cave",
   "there is an door north"},
@@ -253,6 +254,7 @@ game.cave=room:new({
  end
 })
 
+--river
 game.river=room:new({
  desc={"you are at a river bank",
   "there is: cave south,",
@@ -281,6 +283,7 @@ game.river=room:new({
  end
 })
 
+-- crossroads
 game.crossroads=room:new({
  desc={"you are at a crossroads",
   "there are exits everywhere!"},
@@ -308,6 +311,7 @@ game.crossroads=room:new({
  end
 })
 
+--forest-path
 game.forestpath=room:new({
  desc={"you are on a forest path",
   "a path goes north, south"},
@@ -336,6 +340,7 @@ game.forestpath=room:new({
  end
 })
 
+--log-cabin
 game.logcabin=room:new({
  desc={"you are in a log cabin",
   "there is a door south"},
@@ -367,6 +372,7 @@ game.logcabin=room:new({
  end
 })
 
+--wolfs-belly
 game.belly=room:new({
  desc={"you are in a wolfs belly!",
   "there are 'exits' up, down"},
