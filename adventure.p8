@@ -36,8 +36,12 @@ end
 -->8
 --helper functions
 --talking shortcut
-function say(str,col)
- scrl:push(str)
+function say(...)
+ local arg={...}
+ for k,ln in ipairs(arg) do
+  scrl:push(ln)
+  printh("s: "..ln)
+ end
 end
 
 --split string on whitespace
@@ -259,16 +263,16 @@ game.river=room:new({
   if cmd=="south" do
    game:go("cave")
   elseif cmd=="talk" do
-   say("'i am the mighty trololol!")
-   say(" answer me this riddle:")
-   say(" why did the cheese?'")
+   say("'i am the mighty trololol!",
+    " answer me this riddle:",
+    " why did the cheese?'")
   elseif cmd=="cheese" or cmd=="because" or cmd=="what" or cmd=="what?" do
-   say("'correct!'")
-   say("the troll explodes")
+   say("'correct!'",
+    "the troll explodes")
    del(self.items,"troll")
   elseif cmd=="north" and contains(self.items,"troll") do
-   say("a troll is blocking it.")
-   say("you want me to fight? no way!")
+   say("a troll is blocking it.",
+    "you want me to fight? no way!")
   elseif cmd=="north" do
    game:go("crossroads")
   else
@@ -317,8 +321,8 @@ game.forestpath=room:new({
   elseif cmd=="south" do
    game:go("crossroads")
   elseif cmd=="kiss" and contains(self.items,"witch") do
-   say("you turn into a handsome pr...")
-   say("well a human. the witch melts!")
+   say("you turn into a handsome pr...",
+    "well a human. the witch melts!")
    del(self.items,"witch")
   else
    return false
@@ -344,18 +348,18 @@ game.logcabin=room:new({
   elseif cmd=="talk" do
    say("'grandma, what big ??? you have'")
   elseif self.flags.whatbig==0 and (cmd=="ears" or cmd=="ear") do
-   say("'grandma, what big ears'")
-   say("'all the better to hear you'")
+   say("'grandma, what big ears'",
+    "'all the better to hear you'")
    self.flags.whatbig=1
   elseif self.flags.whatbig==1 and (cmd=="hands" or cmd=="hand") do
-   say("'grandma, what big hands'")
-   say("'all the better to hug you'")
+   say("'grandma, what big hands'",
+    "'all the better to hug you'")
    self.flags.whatbig=2
   elseif self.flags.whatbig==2 and cmd=="teeth" do
-   say("'grandma, what big teeth!'")
-   say("'all the better to eat you!!'")
-   say("oh no, it was really a wolf!")
-   say("he eats you! nomnomnom")
+   say("'grandma, what big teeth!'",
+    "'all the better to eat you!!'",
+    "oh no, it was really a wolf!",
+    "he eats you! nomnomnom")
    game:go("belly")   
   else
    return false
@@ -372,12 +376,12 @@ game.belly=room:new({
   if cmd=="up" do
    say("his teeth are firmly closed")
   elseif cmd=="down" and self.flags.sure==0 do
-   say("are we really going out that")
-   say("way?")
+   say("are we really going out that",
+    "way?")
    self.flags.sure=1
   elseif cmd=="down" and self.flags.sure==1 do
-   say("really? you'll turn into... the")
-   say("stuff...")
+   say("really? you'll turn into... the",
+    "stuff...")
    self.flags.sure=2
   elseif cmd=="down" and self.flags.sure==2 do
    say("ok fine. you 'exit' the wolf.")
