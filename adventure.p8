@@ -2,18 +2,14 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 --todo
--- 10 rooms
- -- 4 more
--- end goal. avalon?
--- excalibur?
--- skull with lines on
--- generic but wierd places
+-- fix stupid riddle
+-- grandma puzzle rework
 
 --main pico-8 functions
 function _init()
 	keyb:init()
  game:go("cave")
- game:go("belly")
+ -- game:go("meadow")
 end
 
 function _update()
@@ -276,35 +272,7 @@ game.river=room:new({
    say("a troll is blocking it.",
     "you want me to fight? no way!")
   elseif cmd=="north" do
-   game:go("crossroads")
-  else
-   return false
-  end
- end
-})
-
--- crossroads
-game.crossroads=room:new({
- desc={"you are at a crossroads",
-  "there are exits everywhere!"},
- solution={"east","south","east","north"},
- flags={pos=1},
-
- action=function(self,cmd)
-  if cmd=="north" or cmd=="south" or cmd=="east" or cmd=="west" do
-   local hint=""
-   local ok=self.solution[self.flags.pos]==cmd
-   if ok and self.flags.pos==#self.solution do
-    self.flags.pos=1
-    game:go("forestpath")
-    return nil
-   elseif ok do
-    hint="warmer"
-    self.flags.pos=self.flags.pos+1
-   else
-    self.flags.pos=1
-   end
-   say("you go "..cmd.."... "..hint)
+   game:go("forestpath")
   else
    return false
   end
@@ -323,7 +291,7 @@ game.forestpath=room:new({
   elseif cmd=="north" do
    game:go("logcabin")
   elseif cmd=="south" do
-   game:go("crossroads")
+   game:go("river")
   elseif cmd=="kiss" and contains(self.items,"witch") do
    say("you turn into a handsome pr...",
     "well a human. the witch melts!")
@@ -391,6 +359,57 @@ game.belly=room:new({
    self.flags.sure=2
   elseif cmd=="down" and self.flags.sure==2 do
    say("ok fine. you 'exit' the wolf.")
+   game:go("crossroads")
+  else
+   return false
+  end
+ end
+})
+
+--crossroads
+game.crossroads=room:new({
+ desc={"you are at a crossroads",
+  "there are exits everywhere!"},
+ solution={"east","south","east","north"},
+ flags={pos=1},
+
+ action=function(self,cmd)
+  if cmd=="north" or cmd=="south" or cmd=="east" or cmd=="west" do
+   local hint=""
+   local ok=self.solution[self.flags.pos]==cmd
+   if ok and self.flags.pos==#self.solution do
+    self.flags.pos=1
+    game:go("meadow")
+    return nil
+   elseif ok do
+    hint="warmer"
+    self.flags.pos=self.flags.pos+1
+   else
+    self.flags.pos=1
+   end
+   say("you go "..cmd.."... "..hint)
+  else
+   return false
+  end
+ end
+})
+
+--meadow
+game.meadow=room:new({
+ desc={"you are at a lovely meadow",
+  "there is an exit south."},
+ items={"excalibur"},
+
+ action=function(self,cmd,tar)
+  if cmd=="south" do
+   game:go("crossroads")
+  elseif cmd=="get" and tar=="excalibur" do
+   game:addinv("excalibur")
+   del(self.items,"excalibur")
+   say("you get excalibur!",
+    "",
+    "well done brave adventurer!",
+    "you have won!")
   else
    return false
   end
