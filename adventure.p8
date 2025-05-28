@@ -3,13 +3,12 @@ version 42
 __lua__
 --todo
 -- fix stupid riddle
--- grandma puzzle rework
 
 --main pico-8 functions
 function _init()
 	keyb:init()
  game:go("cave")
- -- game:go("meadow")
+ -- game:go("logcabin")
 end
 
 function _update()
@@ -313,22 +312,22 @@ game.logcabin=room:new({
  desc={"you are in a log cabin",
   "there is a door south"},
  items={"grandma"},
- flags={whatbig=0},
 
  action=function(self,cmd)
   if cmd=="south" do
    game:go("forestpath")
   elseif cmd=="talk" do
    say("'grandma, what big ??? you have'")
-  elseif self.flags.whatbig==0 and (cmd=="ears" or cmd=="ear") do
+  elseif cmd=="ears" or cmd=="ear" do
    say("'grandma, what big ears'",
     "'all the better to hear you'")
-   self.flags.whatbig=1
-  elseif self.flags.whatbig==1 and (cmd=="hands" or cmd=="hand") do
+  elseif cmd=="eyes" or cmd=="eye" do
+   say("'grandma, what big eyes'",
+    "'all the better to see you'")
+  elseif cmd=="hands" or cmd=="hand" do
    say("'grandma, what big hands'",
     "'all the better to hug you'")
-   self.flags.whatbig=2
-  elseif self.flags.whatbig==2 and cmd=="teeth" do
+  elseif cmd=="teeth" or cmd=="tooth" do
    say("'grandma, what big teeth!'",
     "'all the better to eat you!!'",
     "oh no, it was really a wolf!",
