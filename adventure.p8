@@ -2,13 +2,13 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 --todo
--- fix stupid riddle
+-- done!
 
 --main pico-8 functions
 function _init()
 	keyb:init()
  game:go("cave")
- -- game:go("logcabin")
+ -- game:go("forestpath")
 end
 
 function _update()
@@ -262,8 +262,9 @@ game.river=room:new({
   elseif cmd=="talk" do
    say("'i am the mighty trololol!",
     " answer me this riddle:",
-    " why did the cheese?'")
-  elseif cmd=="cheese" or cmd=="because" or cmd=="what" or cmd=="what?" do
+    " what comes up but never comes",
+    " down?'")
+  elseif cmd=="age" or cmd=="spaceship" or cmd=="rocket" do
    say("'correct!'",
     "the troll explodes")
    del(self.items,"troll")
@@ -283,18 +284,26 @@ game.forestpath=room:new({
  desc={"you are on a forest path",
   "a path goes north, south"},
  items={"witch"},
+ flags={tries=0,hint=3},
 
  action=function(self,cmd)
-  if contains(self.items,"witch") and (cmd=="north" or cmd=="south") do
-   say("you hop helplessly. ribbit!")
+  if contains(self.items,"witch") do
+   if cmd=="kiss" do
+    say("you turn into a handsome pr...",
+     "well a human. the witch melts!")
+    del(self.items,"witch")
+   else
+    self.flags.tries=self.flags.tries+1
+    say("you hop helplessly. ribbit!")
+    if self.flags.tries%self.flags.hint==0 do
+     say("how do you turn a frog into",
+      " a prince again?")
+    end
+   end
   elseif cmd=="north" do
    game:go("logcabin")
   elseif cmd=="south" do
    game:go("river")
-  elseif cmd=="kiss" and contains(self.items,"witch") do
-   say("you turn into a handsome pr...",
-    "well a human. the witch melts!")
-   del(self.items,"witch")
   else
    return false
   end
@@ -353,8 +362,8 @@ game.belly=room:new({
     "way?")
    self.flags.sure=1
   elseif cmd=="down" and self.flags.sure==1 do
-   say("really? you'll turn into... the",
-    "stuff...")
+   say("really? know what that will make",
+    "you?")
    self.flags.sure=2
   elseif cmd=="down" and self.flags.sure==2 do
    say("ok fine. you 'exit' the wolf.")
