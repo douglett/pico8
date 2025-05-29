@@ -7,6 +7,9 @@ __lua__
 --main pico-8 functions
 function _init()
 	keyb:init()
+ say("-adventure-",
+  "the quest for excalibur begins!",
+  "")
  game:go("cave")
  -- game:go("forestpath")
 end
